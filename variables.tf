@@ -39,3 +39,13 @@ variable "availability_zone" {
   type        = string
   default     = "eu-west-1a"
 }
+
+variable "admin_cidr" {
+  description = "Your IP address in CIDR notation (e.g. 203.0.113.10/32) allowed to SSH into instances. Never set this to 0.0.0.0/0."
+  type        = string
+
+  validation {
+    condition     = var.admin_cidr != "0.0.0.0/0"
+    error_message = "admin_cidr must not be 0.0.0.0/0 — restrict SSH access to your own IP address."
+  }
+}
