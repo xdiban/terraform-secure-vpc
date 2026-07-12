@@ -72,7 +72,7 @@ The key pair used for this project was generated specifically for it (`ssh-keyge
 
 ## Known trade-offs / next improvements
 
-- The IAM user used to run Terraform (`terraform-cli`) currently has `AdministratorAccess` rather than a scoped least-privilege policy. This was a deliberate speed-over-rigor call for a personal sandbox account with no other workloads — a real deployment should scope this to exactly the services in use (EC2, VPC, etc.).
+- The IAM user used to run Terraform (`terraform-cli`) has `AmazonEC2FullAccess`, `AmazonVPCFullAccess`, `AmazonS3FullAccess`, and `IAMFullAccess` attached — not `AdministratorAccess`, but still broader than this project strictly needs (no S3 or IAM resources are created by the current config; those two were added ahead of planned work like a remote state backend and instance IAM roles). `IAMFullAccess` in particular is worth calling out: it can create and attach policies to other identities, which is a privilege-escalation path if the credentials were ever compromised. A tighter setup would use a custom policy scoped to the specific actions Terraform actually calls, adding S3/IAM permissions only when those resources are actually introduced.
 - Security group egress is fully open (`0.0.0.0/0`, all ports). Restricting outbound traffic is a further hardening step, deferred here since it requires enumerating every destination the instance legitimately needs.
 - State is currently local. A remote backend (S3 + DynamoDB for locking) is a planned addition.
 - No automated `terraform validate` / `tfsec` checks in CI yet — planned as a GitHub Actions workflow.
