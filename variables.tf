@@ -40,6 +40,11 @@ variable "availability_zone" {
   default     = "eu-west-1a"
 }
 
+variable "ssh_public_key" {
+  description = "Your local SSH public key contents (e.g. contents of ~/.ssh/id_ed25519.pub), uploaded to AWS as the EC2 key pair. Never put a private key here."
+  type        = string
+}
+
 variable "admin_cidr" {
   description = "Your IP address in CIDR notation (e.g. 203.0.113.10/32) allowed to SSH into instances. Never set this to 0.0.0.0/0."
   type        = string
